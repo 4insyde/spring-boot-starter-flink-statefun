@@ -56,14 +56,14 @@ Guide https://spring.io/guides/gs/spring-boot
 
 ### Step 3 - Create a function
 
-We created a simple function TesteeFn that increment COUNT value when receive IncrementEvent.
+We created a simple function FooFn that increment COUNT value when receive IncrementEvent.
 Also, we can mark it with @Component annotation and now out function is a part of Spring context
 
 ```java
 @Component
-public class TesteeFn implements DispatchableFunction {
+public class FooFn implements DispatchableFunction {
 
-    public static final TypeName TYPE = TypeName.typeNameFromString("namespace/testee");
+    public static final TypeName TYPE = TypeName.typeNameFromString("namespace/foo");
     public static final ValueSpec<Integer> COUNT = ValueSpec.named("count").withIntType();
 
     @Handler
