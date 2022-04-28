@@ -27,11 +27,13 @@ it is integer that identify step order. Requirements to the ordered step method 
 `StepInteractor<T>` - interface that used to interact in scope of orchestration step. This interface has 3 method that should be implemented
 
 ```java
-void execute(Context context, T command, String targetFunctionId) - method responsible for action that should be done when orderedStep receive a command
-
-boolean supportsIncomingMessage(Message message) - method that responsible for identifying is it applicable Message for this step or not
-
-void handle(Step.StepContext stepContext, Message message) - method that responsible for action that should be done when step receives result
+void execute(Context context, T command, String targetFunctionId); // method responsible for action that should be done when orderedStep receive a command
+```
+```java
+boolean supportsIncomingMessage(Message message); // method that responsible for identifying is it applicable Message for this step or not
+```
+```java
+void handle(Step.StepContext stepContext, Message message); // method that responsible for action that should be done when step receives result
 ```
 
 `Step` - class that describe orderedStep behaviour
