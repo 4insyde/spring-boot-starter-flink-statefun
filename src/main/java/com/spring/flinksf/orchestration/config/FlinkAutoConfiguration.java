@@ -2,24 +2,39 @@ package com.spring.flinksf.orchestration.config;
 
 import com.spring.flinksf.orchestration.*;
 import com.spring.flinksf.orchestration.api.DispatchableFunction;
+import com.spring.flinksf.orchestration.api.FunctionRouteController;
 import com.spring.flinksf.orchestration.dispatcher.HandlerMessageDispatcher;
+import com.spring.flinksf.orchestration.dispatcher.HandlerMethodAnalyzer;
+import com.spring.flinksf.orchestration.dispatcher.HandlerMethodCache;
 import com.spring.flinksf.orchestration.dispatcher.MessageDispatcher;
 import org.apache.flink.statefun.sdk.java.StatefulFunctions;
 import org.apache.flink.statefun.sdk.java.handler.RequestReplyHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
 @Configuration
+@ComponentScan(basePackageClasses = FunctionRouteController.class)
 @ConditionalOnBean(TypeResolver.class)
 public class FlinkAutoConfiguration {
 
     @Bean
-    public MessageDispatcher messageDispatcher(TypeResolver typeResolver) {
-        return new HandlerMessageDispatcher(typeResolver);
+    public HandlerMethodCache handlerMethodCache(){
+        return new HandlerMethodCache();
+    }
+
+    @Bean
+    public HandlerMethodAnalyzer handlerMethodAnalyzer(TypeResolver typeResolver){
+        return new HandlerMethodAnalyzer(typeResolver);
+    }
+
+    @Bean
+    public MessageDispatcher messageDispatcher(HandlerMethodCache cache, HandlerMethodAnalyzer analyzer) {
+        return new HandlerMessageDispatcher(cache, analyzer);
     }
 
     @Profile("!test")
