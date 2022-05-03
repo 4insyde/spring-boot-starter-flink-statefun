@@ -1,4 +1,4 @@
-package com.spring.flinksf.orchestration.api;
+package com.spring.flinksf.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

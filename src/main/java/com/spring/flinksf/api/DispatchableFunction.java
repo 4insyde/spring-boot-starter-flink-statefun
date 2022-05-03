@@ -1,4 +1,4 @@
-package com.spring.flinksf.orchestration.api;
+package com.spring.flinksf.api;
 
 import org.apache.flink.statefun.sdk.java.Context;
 import org.apache.flink.statefun.sdk.java.StatefulFunction;

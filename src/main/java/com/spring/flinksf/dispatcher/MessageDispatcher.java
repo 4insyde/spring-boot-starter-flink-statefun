@@ -1,4 +1,4 @@
-package com.spring.flinksf.orchestration.dispatcher;
+package com.spring.flinksf.dispatcher;
 
 import org.apache.flink.statefun.sdk.java.Context;
 import org.apache.flink.statefun.sdk.java.message.Message;

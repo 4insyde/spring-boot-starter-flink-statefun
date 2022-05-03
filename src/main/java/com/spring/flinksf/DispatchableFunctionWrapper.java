@@ -1,7 +1,7 @@
-package com.spring.flinksf.orchestration;
+package com.spring.flinksf;
 
-import com.spring.flinksf.orchestration.dispatcher.DispatchingResult;
-import com.spring.flinksf.orchestration.dispatcher.MessageDispatcher;
+import com.spring.flinksf.dispatcher.DispatchingResult;
+import com.spring.flinksf.dispatcher.MessageDispatcher;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

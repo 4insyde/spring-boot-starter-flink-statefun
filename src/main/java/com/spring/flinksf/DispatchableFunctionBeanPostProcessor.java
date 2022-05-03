@@ -1,7 +1,7 @@
-package com.spring.flinksf.orchestration;
+package com.spring.flinksf;
 
-import com.spring.flinksf.orchestration.api.DispatchableFunction;
-import com.spring.flinksf.orchestration.dispatcher.HandlerMessageDispatcher;
+import com.spring.flinksf.api.DispatchableFunction;
+import com.spring.flinksf.dispatcher.HandlerMessageDispatcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

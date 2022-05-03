@@ -1,12 +1,12 @@
-package com.spring.flinksf.orchestration.config;
+package com.spring.flinksf.config;
 
-import com.spring.flinksf.orchestration.*;
-import com.spring.flinksf.orchestration.api.DispatchableFunction;
-import com.spring.flinksf.orchestration.api.FunctionRouteController;
-import com.spring.flinksf.orchestration.dispatcher.HandlerMessageDispatcher;
-import com.spring.flinksf.orchestration.dispatcher.HandlerMethodAnalyzer;
-import com.spring.flinksf.orchestration.dispatcher.HandlerMethodCache;
-import com.spring.flinksf.orchestration.dispatcher.MessageDispatcher;
+import com.spring.flinksf.*;
+import com.spring.flinksf.api.DispatchableFunction;
+import com.spring.flinksf.api.FunctionRouteController;
+import com.spring.flinksf.dispatcher.HandlerMessageDispatcher;
+import com.spring.flinksf.dispatcher.HandlerMethodAnalyzer;
+import com.spring.flinksf.dispatcher.HandlerMethodCache;
+import com.spring.flinksf.dispatcher.MessageDispatcher;
 import org.apache.flink.statefun.sdk.java.StatefulFunctions;
 import org.apache.flink.statefun.sdk.java.handler.RequestReplyHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

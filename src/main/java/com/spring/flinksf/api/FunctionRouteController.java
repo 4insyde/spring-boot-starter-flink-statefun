@@ -1,6 +1,6 @@
-package com.spring.flinksf.orchestration.api;
+package com.spring.flinksf.api;
 
-import com.spring.flinksf.orchestration.FunctionRouter;
+import com.spring.flinksf.FunctionRouter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

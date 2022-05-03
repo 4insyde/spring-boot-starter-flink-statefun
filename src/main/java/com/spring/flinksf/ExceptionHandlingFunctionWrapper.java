@@ -1,4 +1,4 @@
-package com.spring.flinksf.orchestration;
+package com.spring.flinksf;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

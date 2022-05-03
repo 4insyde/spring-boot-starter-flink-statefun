@@ -1,7 +1,7 @@
-package com.spring.flinksf.orchestration;
+package com.spring.flinksf;
 
-import com.spring.flinksf.orchestration.api.DispatchableFunction;
-import com.spring.flinksf.orchestration.dispatcher.MessageDispatcher;
+import com.spring.flinksf.api.DispatchableFunction;
+import com.spring.flinksf.dispatcher.MessageDispatcher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

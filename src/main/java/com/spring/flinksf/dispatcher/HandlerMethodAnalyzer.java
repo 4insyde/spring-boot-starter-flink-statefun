@@ -1,8 +1,8 @@
-package com.spring.flinksf.orchestration.dispatcher;
+package com.spring.flinksf.dispatcher;
 
-import com.spring.flinksf.orchestration.TypeResolver;
-import com.spring.flinksf.orchestration.api.DispatchableFunction;
-import com.spring.flinksf.orchestration.api.Handler;
+import com.spring.flinksf.TypeResolver;
+import com.spring.flinksf.api.DispatchableFunction;
+import com.spring.flinksf.api.Handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.flink.statefun.sdk.java.types.Type;
 

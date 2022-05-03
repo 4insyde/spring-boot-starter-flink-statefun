@@ -1,6 +1,6 @@
-package com.spring.flinksf.orchestration;
+package com.spring.flinksf;
 
-import com.spring.flinksf.orchestration.api.DispatchableFunction;
+import com.spring.flinksf.api.DispatchableFunction;
 import org.apache.flink.statefun.sdk.java.Context;
 import org.apache.flink.statefun.sdk.java.StatefulFunction;
 import org.apache.flink.statefun.sdk.java.message.Message;

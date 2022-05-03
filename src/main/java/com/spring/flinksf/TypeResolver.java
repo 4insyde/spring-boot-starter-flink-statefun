@@ -1,4 +1,4 @@
-package com.spring.flinksf.orchestration;
+package com.spring.flinksf;
 
 import org.apache.flink.statefun.sdk.java.types.Type;
 

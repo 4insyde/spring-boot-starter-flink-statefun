@@ -1,6 +1,6 @@
-package com.spring.flinksf.orchestration.dispatcher;
+package com.spring.flinksf.dispatcher;
 
-import com.spring.flinksf.orchestration.api.DispatchableFunction;
+import com.spring.flinksf.api.DispatchableFunction;
 import lombok.RequiredArgsConstructor;
 import org.apache.flink.statefun.sdk.java.Context;
 import org.apache.flink.statefun.sdk.java.message.Message;

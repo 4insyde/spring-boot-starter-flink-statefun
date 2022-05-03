@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.spring.flinksf.orchestration.config.FlinkAutoConfiguration
+  com.spring.flinksf.config.FlinkAutoConfiguration
