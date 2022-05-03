@@ -9,6 +9,7 @@ import com.spring.flinksf.dispatcher.HandlerMethodCache;
 import com.spring.flinksf.dispatcher.MessageDispatcher;
 import org.apache.flink.statefun.sdk.java.StatefulFunctions;
 import org.apache.flink.statefun.sdk.java.handler.RequestReplyHandler;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Profile;
 import java.util.List;
 
 @Configuration
-@ComponentScan(basePackageClasses = FunctionRouteController.class)
+@ComponentScan(basePackageClasses = {FunctionRouteController.class, DispatchableFunctionBeanPostProcessor.class})
 @ConditionalOnBean(TypeResolver.class)
 public class FlinkAutoConfiguration {
 
@@ -33,7 +34,7 @@ public class FlinkAutoConfiguration {
     }
 
     @Bean
-    public MessageDispatcher messageDispatcher(HandlerMethodCache cache, HandlerMethodAnalyzer analyzer) {
+    public HandlerMessageDispatcher messageDispatcher(HandlerMethodCache cache, HandlerMethodAnalyzer analyzer) {
         return new HandlerMessageDispatcher(cache, analyzer);
     }
 
@@ -67,5 +68,10 @@ public class FlinkAutoConfiguration {
     @Bean
     public FunctionRouter functionRouter(RequestReplyHandler requestReplyHandler){
         return new FunctionRouterImpl(requestReplyHandler);
+    }
+
+    @Bean
+    public BeanPostProcessor beanPostProcessor(HandlerMessageDispatcher handlerMessageDispatcher, DispatchableFunctionWrapperFactory factory){
+        return new DispatchableFunctionBeanPostProcessor(handlerMessageDispatcher, factory);
     }
 }
