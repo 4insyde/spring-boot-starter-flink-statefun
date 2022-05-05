@@ -1,4 +1,4 @@
-package com.spring.flinksf.dispatcher;
+package com.spring.flinksf.dispatcher.handler;
 
 import com.spring.flinksf.TypeResolver;
 import com.spring.flinksf.api.DispatchableFunction;
@@ -18,9 +18,11 @@ import static java.util.stream.Collectors.toSet;
 public class HandlerMethodAnalyzer {
 
     private final TypeResolver typeResolver;
+    private final HandlerMethodValidator validator;
 
     public Set<InvokableHandler> analyze(Class<? extends DispatchableFunction> functionClass) {
         List<Method> handlers = findHandlers(functionClass);
+        handlers.forEach(validator::validateHandler);
         return define(handlers);
     }
 

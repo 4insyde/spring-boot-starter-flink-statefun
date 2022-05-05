@@ -1,4 +1,4 @@
-package com.spring.flinksf.dispatcher;
+package com.spring.flinksf.dispatcher.handler;
 
 import com.spring.flinksf.api.DispatchableFunction;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class HandlerMethodCache {
+public class InmemoryHandlerMethodCache implements HandlerMethodCache{
 
     private final Map<Class<? extends DispatchableFunction>, Map<TypeName, InvokableHandler>> cache = new HashMap<>();
 

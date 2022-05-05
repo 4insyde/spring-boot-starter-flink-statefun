@@ -4,13 +4,12 @@ import com.spring.flinksf.*;
 import com.spring.flinksf.api.DispatchableFunction;
 import com.spring.flinksf.api.FunctionRouteController;
 import com.spring.flinksf.dispatcher.HandlerMessageDispatcher;
-import com.spring.flinksf.dispatcher.HandlerMethodAnalyzer;
-import com.spring.flinksf.dispatcher.HandlerMethodCache;
-import com.spring.flinksf.dispatcher.MessageDispatcher;
+import com.spring.flinksf.dispatcher.handler.*;
 import org.apache.flink.statefun.sdk.java.StatefulFunctions;
 import org.apache.flink.statefun.sdk.java.handler.RequestReplyHandler;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,19 +22,25 @@ import java.util.List;
 @ConditionalOnBean(TypeResolver.class)
 public class FlinkAutoConfiguration {
 
+    @ConditionalOnMissingBean
     @Bean
-    public HandlerMethodCache handlerMethodCache(){
-        return new HandlerMethodCache();
+    public HandlerMethodCache handlerMethodCache() {
+        return new InmemoryHandlerMethodCache();
     }
 
     @Bean
-    public HandlerMethodAnalyzer handlerMethodAnalyzer(TypeResolver typeResolver){
-        return new HandlerMethodAnalyzer(typeResolver);
+    public HandlerMethodAnalyzer handlerMethodAnalyzer(TypeResolver typeResolver, HandlerMethodValidator validator) {
+        return new HandlerMethodAnalyzer(typeResolver, validator);
     }
 
     @Bean
-    public HandlerMessageDispatcher messageDispatcher(HandlerMethodCache cache, HandlerMethodAnalyzer analyzer) {
-        return new HandlerMessageDispatcher(cache, analyzer);
+    public HandlerMessageDispatcher messageDispatcher(HandlerFacade facade) {
+        return new HandlerMessageDispatcher(facade);
+    }
+
+    @Bean
+    public HandlerFacade handlerFacade(HandlerMethodCache cache, HandlerMethodAnalyzer analyzer) {
+        return new HandlerFacadeImpl(analyzer, cache);
     }
 
     @Profile("!test")
@@ -66,12 +71,17 @@ public class FlinkAutoConfiguration {
     }
 
     @Bean
-    public FunctionRouter functionRouter(RequestReplyHandler requestReplyHandler){
+    public FunctionRouter functionRouter(RequestReplyHandler requestReplyHandler) {
         return new FunctionRouterImpl(requestReplyHandler);
     }
 
     @Bean
-    public BeanPostProcessor beanPostProcessor(HandlerMessageDispatcher handlerMessageDispatcher, DispatchableFunctionWrapperFactory factory){
-        return new DispatchableFunctionBeanPostProcessor(handlerMessageDispatcher, factory);
+    public BeanPostProcessor beanPostProcessor(HandlerMessageDispatcher handlerMessageDispatcher, DispatchableFunctionWrapperFactory factory, HandlerFacade facade) {
+        return new DispatchableFunctionBeanPostProcessor(handlerMessageDispatcher, factory, facade);
+    }
+
+    @Bean
+    public HandlerMethodValidator handlerMethodValidator(TypeResolver typeResolver) {
+        return new HandlerMethodValidator(typeResolver);
     }
 }

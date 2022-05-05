@@ -1,6 +1,6 @@
-package com.spring.flinksf.dispatcher;
+package com.spring.flinksf.dispatcher.handler;
 
-import lombok.Getter;
+import com.spring.flinksf.dispatcher.DispatchingResult;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.flink.statefun.sdk.java.Context;
@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
-class InvokableHandler {
+public class InvokableHandler {
 
     private final Type<?> type;
     private final Method handler;
@@ -20,9 +20,11 @@ class InvokableHandler {
     public boolean supports(Message message) {
         return type != null && message.is(type);
     }
-    public TypeName getTypeName(){
+
+    public TypeName getTypeName() {
         return type.typeName();
     }
+
     @SneakyThrows
     public DispatchingResult invoke(Object function, Context context, Message message) {
         Object object = message.as(type);
