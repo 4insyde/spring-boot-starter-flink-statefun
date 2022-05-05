@@ -15,6 +15,10 @@ and increase function readability
 
 `DispatchableFunction` - interface that you should use instead of `StatefulFunction`
 
+###Endpoint
+Endpoint `/v1/functions` - is API for statefun engine for communication with remote module, via this endpoint 
+statefun engine is able to invoke functions which registered in spring context
+
 ## Starter in Action
 
 ### Step 1 - Create Spring boot Application
