@@ -21,7 +21,7 @@ and increase function readability
 I think it shouldn't be an issue for the most developers that familiar with Spring boot.
 Guide https://spring.io/guides/gs/spring-boot
 
-### Step 2 - Add the starter into maven dependencies
+### Step 2 - Add starter dependency into maven pom.xml
 
 ```xml
 <dependency>
