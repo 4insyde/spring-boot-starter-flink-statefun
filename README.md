@@ -29,7 +29,7 @@ Guide https://spring.io/guides/gs/spring-boot
 
 ```xml
 <dependency>
-    <groupId>com.github.csipon.spring.flink-sf</groupId>
+    <groupId>com.github.csipon</groupId>
     <artifactId>spring-boot-starter-flink-sf</artifactId>
     <version>0.1.0</version>
 </dependency>
