@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.CompletableFuture;
 
+
+/**
+ * A {@link FunctionRouteController} is the point of API to interact with this module.
+ * Endpoint {@code /v1/functions} that is used in the controller should be used by Apache Flink SF engine to invoke
+ * the module
+ */
 @Slf4j
 @RestController
 @RequestMapping("/v1/functions")
