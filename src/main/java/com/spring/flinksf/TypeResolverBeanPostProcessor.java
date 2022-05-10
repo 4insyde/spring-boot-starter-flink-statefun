@@ -90,7 +90,7 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
 
     private boolean isCandidate(MetadataReader metadataReader) {
         return loadClass(metadataReader)
-                .filter(cls -> SerdeType.class.isAssignableFrom(cls))
+                .filter(SerdeType.class::isAssignableFrom)
                 .isPresent();
     }
 
