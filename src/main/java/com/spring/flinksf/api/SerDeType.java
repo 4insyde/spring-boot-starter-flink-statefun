@@ -2,9 +2,7 @@ package com.spring.flinksf.api;
 
 import org.apache.flink.statefun.sdk.java.types.Type;
 
-public interface SerdeType<T> {
+public interface SerDeType<T> {
 
-    Class<T> getTypeClass();
-
-    Type<T> getType();
+    Type<T> type();
 }

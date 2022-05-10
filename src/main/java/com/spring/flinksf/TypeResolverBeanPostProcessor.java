@@ -1,7 +1,7 @@
 package com.spring.flinksf;
 
 import com.spring.flinksf.api.EnableMessageTypeScan;
-import com.spring.flinksf.api.SerdeType;
+import com.spring.flinksf.api.SerDeType;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeansException;
@@ -41,24 +41,23 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
                     .flatMap(Collection::stream)
                     .filter(c -> !c.isInterface())
                     .map(this::loadObjectByCLass)
-                    .forEach(t -> typeResolver.put(t.getTypeClass(), t.getType()));
+                    .forEach(typeResolver::put);
         }
-
         return bean;
     }
 
     @SneakyThrows
-    private SerdeType<?> loadObjectByCLass(Class<? extends SerdeType<?>> type) {
+    private SerDeType<?> loadObjectByCLass(Class<? extends SerDeType<?>> type) {
         Constructor<?> constructor = type.getConstructor();
-        return (SerdeType<?>) constructor.newInstance();
+        return (SerDeType<?>) constructor.newInstance();
     }
 
     @SneakyThrows
-    private List<Class<? extends SerdeType<?>>> findTypes(String basePackage) {
+    private List<Class<? extends SerDeType<?>>> findTypes(String basePackage) {
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resourcePatternResolver);
 
-        List<Class<? extends SerdeType<?>>> candidates = new ArrayList<>();
+        List<Class<? extends SerDeType<?>>> candidates = new ArrayList<>();
         String packageSearchPath = resolveClasspath(basePackage);
         Resource[] resources = resourcePatternResolver.getResources(packageSearchPath);
         Stream.of(resources)
@@ -67,7 +66,7 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
                 .map(r -> metadataReader(r, metadataReaderFactory))
                 .filter(this::isCandidate)
                 .map(this::loadClass)
-                .forEach(c -> candidates.add((Class<? extends SerdeType<?>>) c.get()));
+                .forEach(c -> candidates.add((Class<? extends SerDeType<?>>) c.get()));
         return candidates;
     }
 
@@ -90,7 +89,7 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
 
     private boolean isCandidate(MetadataReader metadataReader) {
         return loadClass(metadataReader)
-                .filter(SerdeType.class::isAssignableFrom)
+                .filter(SerDeType.class::isAssignableFrom)
                 .isPresent();
     }
 

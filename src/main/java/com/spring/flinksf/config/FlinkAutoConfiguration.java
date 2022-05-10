@@ -82,8 +82,8 @@ public class FlinkAutoConfiguration {
     }
 
     @Bean
-    public TypeResolverBeanPostProcessor typeResolverBeanPostProcessor(TypeResolver resolver) {
-        return new TypeResolverBeanPostProcessor(resolver);
+    public TypeResolverBeanPostProcessor typeResolverBeanPostProcessor(TypeResolver typeResolver){
+        return new TypeResolverBeanPostProcessor(typeResolver);
     }
 
     @Bean
