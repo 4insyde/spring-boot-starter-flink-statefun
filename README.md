@@ -40,8 +40,8 @@ Guide https://spring.io/guides/gs/spring-boot
 ```
 
 ### Step 3 - Create function event
-We create a simple event with one field `text` and static field `TYPE` that annotated with `@MessageType` 
-`TYPE` field is responsible for `IncrementEvent` serialization and deserialization. Annotation `@MessaageType` 
+We create a simple event with one field `text` and static field `TYPE` that annotated with `@MessageType`.
+TYPE field is responsible for `IncrementEvent` serialization and deserialization. Annotation `@MessaageType` 
 says that this field will be found and loaded into global type resolver, therefore it will be 
 able to use this event in our functions
 ```java
