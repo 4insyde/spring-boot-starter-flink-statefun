@@ -26,7 +26,7 @@ statefun engine is able to invoke functions which registered in spring context
 ## Starter in Action
 
 ### Step 1 - Create Spring boot Application
-I think it shouldn't be an issue for the most developers that familiar with Spring boot.
+I think it shouldn't be an issue for most developers that are familiar with Spring boot.
 Guide https://spring.io/guides/gs/spring-boot
 
 ### Step 2 - Add starter dependency into maven pom.xml
@@ -60,7 +60,7 @@ public class IncrementEvent {
 
 ### Step 4 - Create a function
 
-We created a simple function FooFn that increment COUNT value when receive IncrementEvent.
+We created a simple function FooFn that increments COUNT value when receiving an IncrementEvent.
 Also, we can mark it with @Component annotation and now out function is a part of Spring context
 
 ```java
@@ -72,7 +72,7 @@ public class FooFn implements DispatchableFunction {
 
     @Handler
     public CompletableFuture<Void> increment(Context context, IncrementEvent event) {
-//        do some action with event ...
+//        do some action with the event ...
 //        extract value from the context or default
         Integer count = context.storage().get(COUNT).orElse(0);
 //        change value
@@ -106,7 +106,7 @@ We've created the Stateful Function that can handle several events(IncrementEven
 our function is a Spring bean and part of Spring's context, therefore we can use all Spring features for this bean.
 
 ### Alternative type declaration
-For some event it's impossible to declare field inside the event and annotate it. To do type declaration in 
+For some events it's impossible to declare a field inside the event and annotate it. To do type declaration in 
 different approach you can use `SerDeType<T>`
 ## Example
 ```java
