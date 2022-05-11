@@ -60,8 +60,8 @@ public class IncrementEvent {
 
 ### Step 4 - Create a function
 
-We created a simple function FooFn that increments COUNT value when receiving an IncrementEvent.
-Also, we can mark it with @Component annotation and now out function is a part of Spring context
+We created a simple function `FooFn` that increments `COUNT` value when receiving an `IncrementEvent`.
+Also, we can mark it with `@Component` annotation and now out function is a part of Spring context
 
 ```java
 @Component
@@ -102,7 +102,7 @@ Now we can easily add another handler, let's call it decrement
 
 ### Summary 
 
-We've created the Stateful Function that can handle several events(IncrementEvent, DecrementEvent), moreover 
+We've created the Stateful Function that can handle several events(`IncrementEvent`, `DecrementEvent`), moreover 
 our function is a Spring bean and part of Spring's context, therefore we can use all Spring features for this bean.
 
 ### Alternative type declaration
