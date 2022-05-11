@@ -4,18 +4,21 @@ import com.spring.flinksf.api.SerDeType;
 import lombok.RequiredArgsConstructor;
 import org.apache.flink.statefun.sdk.java.types.Type;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.spring.flinksf.ReflectionUtil.retrieveGeneric;
+import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 public class TypeResolverImpl implements TypeResolver {
     private final Map<Class<?>, Type<?>> types = new HashMap<>();
 
+    private final List<SerDeType<?>> serDeTypes;
 
-    public void put(SerDeType<?> type) {
-        types.put(retrieveGeneric(type), type.type());
+    public void put(Class<?> genericClass, Type<?> type) {
+        types.put(genericClass, type);
     }
 
     @Override
@@ -23,4 +26,11 @@ public class TypeResolverImpl implements TypeResolver {
         return (Type<T>) types.get(clazz);
     }
 
+    @PostConstruct
+    private void init() {
+        if (serDeTypes != null) {
+            Map<? extends Class<?>, ? extends Type<?>> typeMap = serDeTypes.stream().collect(toMap(ReflectionUtil::retrieveGeneric, SerDeType::type));
+            types.putAll(typeMap);
+        }
+    }
 }

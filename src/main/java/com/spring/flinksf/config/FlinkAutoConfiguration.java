@@ -3,6 +3,7 @@ package com.spring.flinksf.config;
 import com.spring.flinksf.*;
 import com.spring.flinksf.api.DispatchableFunction;
 import com.spring.flinksf.api.FunctionRouteController;
+import com.spring.flinksf.api.SerDeType;
 import com.spring.flinksf.dispatcher.HandlerMessageDispatcher;
 import com.spring.flinksf.dispatcher.handler.*;
 import org.apache.flink.statefun.sdk.java.StatefulFunctions;
@@ -92,7 +93,7 @@ public class FlinkAutoConfiguration {
     }
 
     @Bean
-    public TypeResolver typeResolver() {
-        return new TypeResolverImpl();
+    public TypeResolver typeResolver(List<SerDeType<?>> serDeTypes) {
+        return new TypeResolverImpl(serDeTypes);
     }
 }

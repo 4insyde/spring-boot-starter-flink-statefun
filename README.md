@@ -13,7 +13,11 @@ and increase function readability
 2. return value is `CompletableFuture<Void>`
 3. Method parameters `Context context, T event` where `T` is any class that can be serialized and deserialized
 
+`@MessageType` - annotation that could be applied to class or field, that identifying for the starter Type fields\classes 
+which should be loaded automatically into `TypeResolver`
+
 `DispatchableFunction` - interface that you should use instead of `StatefulFunction`
+`SerDeType` - interface that identify flink Type related class, the interface should be annotated with `@MessageType`
 
 ###Endpoint
 Endpoint `/v1/functions` - is API for statefun engine for communication with remote module, via this endpoint 
@@ -35,7 +39,26 @@ Guide https://spring.io/guides/gs/spring-boot
 </dependency>
 ```
 
-### Step 3 - Create a function
+### Step 3 - Create function event
+We create a simple event with one field `text` and static field `TYPE` that annotated with `@MessageType` 
+`TYPE` field is responsible for `IncrementEvent` serialization and deserialization. Annotation `@MessaageType` 
+says that this field will be found and loaded into global type resolver, therefore it will be 
+able to use this event in our functions
+```java
+public class IncrementEvent {
+
+    @MessageType
+    public static final Type<IncrementEvent> TYPE = SimpleType.simpleImmutableTypeFrom(
+            TypeName.typeNameFromString("<namespace>/IncrementEvent"),
+            new ObjectMapper()::writeValueAsBytes,
+            bytes -> new ObjectMapper().readValue(bytes, IncrementEvent.class));
+    
+    private String text;
+    // Constructors, Getters and Setters ...
+}
+```
+
+### Step 4 - Create a function
 
 We created a simple function FooFn that increment COUNT value when receive IncrementEvent.
 Also, we can mark it with @Component annotation and now out function is a part of Spring context
@@ -62,7 +85,7 @@ public class FooFn implements DispatchableFunction {
 }
 ```
 
-### Step 4 - Add additional handlers
+### Step 5 - Add additional handlers
 
 Now we can easily add another handler, let's call it decrement
 

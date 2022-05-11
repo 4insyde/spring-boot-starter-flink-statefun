@@ -1,9 +1,10 @@
 package com.spring.flinksf;
 
 import com.spring.flinksf.api.EnableMessageTypeScan;
-import com.spring.flinksf.api.SerDeType;
+import com.spring.flinksf.api.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.flink.statefun.sdk.java.types.Type;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.io.Resource;
@@ -16,12 +17,16 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.SystemPropertyUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static com.spring.flinksf.ReflectionUtil.retrieveGeneric;
+import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
@@ -39,25 +44,19 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
             Stream.of(basePackageScan)
                     .map(this::findTypes)
                     .flatMap(Collection::stream)
-                    .filter(c -> !c.isInterface())
-                    .map(this::loadObjectByCLass)
-                    .forEach(typeResolver::put);
+                    .map(this::getTypes)
+                    .flatMap(Collection::stream)
+                    .forEach(kv -> typeResolver.put(kv.key, kv.value));
         }
         return bean;
     }
 
     @SneakyThrows
-    private SerDeType<?> loadObjectByCLass(Class<? extends SerDeType<?>> type) {
-        Constructor<?> constructor = type.getConstructor();
-        return (SerDeType<?>) constructor.newInstance();
-    }
-
-    @SneakyThrows
-    private List<Class<? extends SerDeType<?>>> findTypes(String basePackage) {
+    private List<Class<?>> findTypes(String basePackage) {
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resourcePatternResolver);
 
-        List<Class<? extends SerDeType<?>>> candidates = new ArrayList<>();
+        List<Class<?>> candidates = new ArrayList<>();
         String packageSearchPath = resolveClasspath(basePackage);
         Resource[] resources = resourcePatternResolver.getResources(packageSearchPath);
         Stream.of(resources)
@@ -66,10 +65,27 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
                 .map(r -> metadataReader(r, metadataReaderFactory))
                 .filter(this::isCandidate)
                 .map(this::loadClass)
-                .forEach(c -> candidates.add((Class<? extends SerDeType<?>>) c.get()));
+                .forEach(c -> candidates.add(c.orElse(null)));
         return candidates;
     }
 
+    private List<KeyValue<Class<?>, Type<?>>> getTypes(Class<?> classCandidate) {
+        return Stream.of(classCandidate.getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(MessageType.class))
+                .filter(f -> Modifier.isStatic(f.getModifiers()))
+                .filter(f -> f.getType().isAssignableFrom(Type.class))
+                .map(this::extractType)
+                .collect(toList());
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
+    private KeyValue<Class<?>, Type<?>> extractType(Field field) {
+        field.setAccessible(true);
+        Type<?> type = (Type<?>) field.get(null);
+        Class<?> genericType = retrieveGeneric(field);
+        return new KeyValue<>(genericType, type);
+    }
 
     private String resolveClasspath(String basePackage) {
         return ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + resolveBasePackage(basePackage) + "/**/*.class";
@@ -88,9 +104,14 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
     }
 
     private boolean isCandidate(MetadataReader metadataReader) {
-        return loadClass(metadataReader)
-                .filter(SerDeType.class::isAssignableFrom)
-                .isPresent();
+        Optional<Class<?>> aClass = loadClass(metadataReader);
+        if (aClass.isEmpty()) {
+            return false;
+        }
+        return Stream.of(aClass.get().getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(MessageType.class))
+                .filter(f -> Modifier.isStatic(f.getModifiers()))
+                .anyMatch(f -> f.getType().isAssignableFrom(Type.class));
     }
 
     private Optional<Class<?>> loadClass(MetadataReader metadataReader) {
@@ -99,5 +120,11 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
         } catch (Throwable ignore) {
         }
         return Optional.empty();
+    }
+
+    @RequiredArgsConstructor
+    private static class KeyValue<K, V> {
+        private final K key;
+        private final V value;
     }
 }
