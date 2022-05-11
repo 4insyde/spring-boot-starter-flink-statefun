@@ -38,8 +38,11 @@ Guide https://spring.io/guides/gs/spring-boot
     <version>0.1.0</version>
 </dependency>
 ```
+### Step 3 - EnableMessageTypeScan
+To enable scanning fields annotated with `@MessageType` you need apply to your config class `@EnableMessageTypeScan` and
+define annotation parameter `basePackageScan`
 
-### Step 3 - Create function event
+### Step 4 - Create function event
 We create a simple event with one field `text` and static field `TYPE` that annotated with `@MessageType`.
 TYPE field is responsible for `IncrementEvent` serialization and deserialization. Annotation `@MessaageType` 
 says that this field will be found and loaded into global type resolver, therefore it will be 
@@ -58,7 +61,7 @@ public class IncrementEvent {
 }
 ```
 
-### Step 4 - Create a function
+### Step 5 - Create a function
 
 We created a simple function `FooFn` that increments `COUNT` value when receiving an `IncrementEvent`.
 Also, we can mark it with `@Component` annotation and now out function is a part of Spring context
@@ -85,7 +88,7 @@ public class FooFn implements DispatchableFunction {
 }
 ```
 
-### Step 5 - Add additional handlers
+### Step 6 - Add additional handlers
 
 Now we can easily add another handler, let's call it decrement
 
