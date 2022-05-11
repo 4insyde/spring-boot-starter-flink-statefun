@@ -104,3 +104,25 @@ Now we can easily add another handler, let's call it decrement
 
 We've created the Stateful Function that can handle several events(IncrementEvent, DecrementEvent), moreover 
 our function is a Spring bean and part of Spring's context, therefore we can use all Spring features for this bean.
+
+### Alternative type declaration
+For some event it's impossible to declare field inside the event and annotate it. To do type declaration in 
+different approach you can use `SerDeType<T>`
+## Example
+```java
+@MessageType
+public class FooSerDeType implements SerDeType<FooEvent> {
+
+    @Override
+    public Type<FooEvent> type() {
+        return SimpleType.simpleImmutableTypeFrom(
+                TypeName.typeNameFromString("<namespace>/FooEvent"),
+                new ObjectMapper()::writeValueAsBytes,
+                bytes -> new ObjectMapper().readValue(bytes, FooEvent.class));
+    }
+}
+```
+
+It is more powerful approach that require an extra class but open for you all Spring Bean features, actually class
+annotated with `@MessageType` will be registered into Spring Context as bean, it means that you can work with this class
+as with simple spring component
