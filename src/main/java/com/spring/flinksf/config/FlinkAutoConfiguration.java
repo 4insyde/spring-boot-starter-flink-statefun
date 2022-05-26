@@ -9,10 +9,9 @@ import com.spring.flinksf.dispatcher.handler.*;
 import org.apache.flink.statefun.sdk.java.StatefulFunctions;
 import org.apache.flink.statefun.sdk.java.handler.RequestReplyHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.*;
+import org.springframework.core.annotation.Order;
 
 import java.util.List;
 
@@ -21,6 +20,7 @@ import java.util.List;
  * to load all component that is mandatory for starter work
  */
 @Configuration
+@EnableConfigurationProperties(ConfigProperties.class)
 @ComponentScan(basePackageClasses = {FunctionRouteController.class, DispatchableFunctionBeanPostProcessor.class})
 public class FlinkAutoConfiguration {
 
@@ -83,11 +83,12 @@ public class FlinkAutoConfiguration {
     }
 
     @Bean
-    public TypeResolverBeanPostProcessor typeResolverBeanPostProcessor(TypeResolver typeResolver){
-        return new TypeResolverBeanPostProcessor(typeResolver);
+    public TypeResolverBeanPostProcessor typeResolverBeanPostProcessor(TypeResolver typeResolver, ConfigProperties configProperties){
+        return new TypeResolverBeanPostProcessor(typeResolver, configProperties);
     }
 
     @Bean
+    @DependsOn("typeResolverBeanPostProcessor")
     public HandlerMethodValidator handlerMethodValidator(TypeResolver typeResolver) {
         return new HandlerMethodValidator(typeResolver);
     }

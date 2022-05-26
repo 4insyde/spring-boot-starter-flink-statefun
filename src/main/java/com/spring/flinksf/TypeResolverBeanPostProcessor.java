@@ -2,6 +2,7 @@ package com.spring.flinksf;
 
 import com.spring.flinksf.api.EnableMessageTypeScan;
 import com.spring.flinksf.api.MessageType;
+import com.spring.flinksf.config.ConfigProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.flink.statefun.sdk.java.types.Type;
@@ -32,6 +33,7 @@ import static java.util.stream.Collectors.toList;
 public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
 
     private final TypeResolver typeResolver;
+    private final ConfigProperties properties;
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
@@ -60,7 +62,6 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
         String packageSearchPath = resolveClasspath(basePackage);
         Resource[] resources = resourcePatternResolver.getResources(packageSearchPath);
         Stream.of(resources)
-                .parallel()
                 .filter(Resource::isReadable)
                 .map(r -> metadataReader(r, metadataReaderFactory))
                 .filter(this::isCandidate)
@@ -92,6 +93,9 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
     }
 
     private String resolveBasePackage(String basePackage) {
+        if (properties.isValidationEnabled() && !basePackage.contains(".")) {
+            throw new IllegalArgumentException("Assigned base package path looks like root '" + basePackage + "' make it more specific");
+        }
         return ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage));
     }
 

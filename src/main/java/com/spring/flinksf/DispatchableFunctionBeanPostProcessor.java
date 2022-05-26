@@ -6,7 +6,6 @@ import com.spring.flinksf.dispatcher.handler.HandlerFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 public class DispatchableFunctionBeanPostProcessor implements BeanPostProcessor {
