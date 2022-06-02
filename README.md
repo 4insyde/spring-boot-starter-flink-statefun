@@ -7,17 +7,25 @@ It will simplify interaction between spring and flink, helps developers to solve
 and increase function readability
 
 ### API
+`@StatefulFunction` - annotation that indicates a stateful function class and describe how to
+build TypeName for this function. Annotation has two parameters `namespace` and `name`.
+Both of them are used for TypeName in following format <namespace>/<name>. If you didn't define 
+your custom values then TypeName will be created with default value, `namespace` - class package and 
+`name` - class simple name. You can define one of them, these parameters are optional and will override 
+default value.
 
-`@Handler` - this annotation could be applied only for methods with following requirements:
+`@Handler` - annotation that indicates a stateful function handler, could be applied to the method that corresponding 
+following requirements:  
 1. Public method
 2. return value is `CompletableFuture<Void>`
 3. Method parameters `Context context, T event` where `T` is any class that can be serialized and deserialized
 
-`@MessageType` - annotation that could be applied to class or field, that identifying for the starter Type fields\classes 
-which should be loaded automatically into `TypeResolver`
+`@MessageType` - indicates a class or field that will be used to serialize or deserialize Class defined in generic 
+of Type<T> object. Starer will load automatically Type object into `TypeResolver`.
 
-`DispatchableFunction` - interface that you should use instead of `StatefulFunction`
-`SerDeType` - interface that identify flink Type related class, the interface should be annotated with `@MessageType`
+`DispatchableFunction` - interface that indicates to Flink SF specification that it's stateful function.
+`SerDeType` - interface that could be used instead of field messate type declaration to identify Flink Type
+related class, the interface should be annotated with `@MessageType`
 
 ###Endpoint
 Endpoint `/v1/functions` - is API for statefun engine for communication with remote module, via this endpoint 
@@ -41,12 +49,16 @@ Guide https://spring.io/guides/gs/spring-boot
 ### Step 3 - EnableMessageTypeScan
 To enable scanning fields annotated with `@MessageType` you need apply to your config class `@EnableMessageTypeScan` and
 define annotation parameter `basePackageScan`
+If you pass into `basePackageScan` root path, like that `com`, then your will receive an exception that it's not allowed,
+due to so many packages to scan, but for some brave developers it has an option to disable it, keep in mind that 
+starter will scan all classes inside the path and deeper. To disable `basePackageScan` validation define a property 
+`flink-sf.scan.types.validationEnabled=false`
 
 ### Step 4 - Create function event
-We create a simple event with one field `text` and static field `TYPE` that annotated with `@MessageType`.
-TYPE field is responsible for `IncrementEvent` serialization and deserialization. Annotation `@MessaageType` 
-says that this field will be found and loaded into global type resolver, therefore it will be 
-able to use this event in our functions
+Simple event with one field `text` and static field `TYPE` that annotated with `@MessageType`.
+TYPE field is responsible for serialization and deserialization of `IncrementEvent`. Annotation `@MessaageType` 
+says that this field will be found and loaded into global type resolver automatically, therefore it will be 
+able to use this event in functions
 ```java
 public class IncrementEvent {
 
@@ -64,13 +76,13 @@ public class IncrementEvent {
 ### Step 5 - Create a function
 
 We created a simple function `FooFn` that increments `COUNT` value when receiving an `IncrementEvent`.
-Also, we can mark it with `@Component` annotation and now out function is a part of Spring context
+Also, we can mark it with `@StatefulFunction` annotation and now the function is a part of Spring context
 
 ```java
-@Component
-public class FooFn implements DispatchableFunction {
+import com.spring.flinksf.api.StatefulFunction;
 
-    public static final TypeName TYPE = TypeName.typeNameFromString("namespace/foo");
+@StatefulFunction
+public class FooFn implements DispatchableFunction {
     public static final ValueSpec<Integer> COUNT = ValueSpec.named("count").withIntType();
 
     @Handler
@@ -102,6 +114,21 @@ Now we can easily add another handler, let's call it decrement
         return context.done();
     }
 ```
+
+### Step 7 - Add handler that send message to another function
+```java
+@Handler
+    public CompletableFuture<Void> onAddToCard(Context context, BarEvent event) {
+        final Message message =
+                MessageBuilder.forAddress(BarFn.class, "<functionId>")
+                        .withCustomType(BarEvent.TYPE, event)
+                        .build();
+        context.send(message);
+        return context.done();
+    }
+```
+
+Use `MessageBuilder` from starter package to be able to build messages using function class
 
 ### Summary 
 
