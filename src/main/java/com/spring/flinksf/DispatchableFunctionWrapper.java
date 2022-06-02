@@ -1,5 +1,6 @@
 package com.spring.flinksf;
 
+import com.spring.flinksf.api.DispatchableFunction;
 import com.spring.flinksf.dispatcher.DispatchingResult;
 import com.spring.flinksf.dispatcher.MessageDispatcher;
 import lombok.Getter;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import static com.spring.flinksf.TypeNameUtil.typeName;
 
 @RequiredArgsConstructor
 public class DispatchableFunctionWrapper implements FunctionWrapper {
@@ -33,12 +36,12 @@ public class DispatchableFunctionWrapper implements FunctionWrapper {
     public StatefulFunctionSpec createSpec() {
         Field[] declaredFields = wrappedFunction.getClass().getDeclaredFields();
         Map<? extends Class<?>, List<Object>> specFieldValues = Arrays.stream(declaredFields)
-                .filter(f -> f.getType().isAssignableFrom(TypeName.class) || f.getType().isAssignableFrom(ValueSpec.class))
+                .filter(f -> f.getType().isAssignableFrom(ValueSpec.class))
                 .map(this::getValue)
                 .collect(Collectors.groupingBy(Object::getClass));
-        TypeName functionTypeName = (TypeName) specFieldValues.get(TypeName.class).get(0);
+        TypeName functionTypeName = typeName((Class<? extends DispatchableFunction>) wrappedFunction.getClass());
         ValueSpec[] valueSpecs = specFieldValues.getOrDefault(ValueSpec.class, List.of()).stream()
-                .map(v -> (ValueSpec) v)
+                .map(ValueSpec.class::cast)
                 .toArray(ValueSpec[]::new);
         return StatefulFunctionSpec.builder(functionTypeName)
                 .withValueSpecs(valueSpecs)

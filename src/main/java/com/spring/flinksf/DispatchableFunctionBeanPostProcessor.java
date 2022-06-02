@@ -1,6 +1,7 @@
 package com.spring.flinksf;
 
 import com.spring.flinksf.api.DispatchableFunction;
+import com.spring.flinksf.api.StatefulFunction;
 import com.spring.flinksf.dispatcher.HandlerMessageDispatcher;
 import com.spring.flinksf.dispatcher.handler.HandlerFacade;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,8 @@ public class DispatchableFunctionBeanPostProcessor implements BeanPostProcessor 
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof DispatchableFunction) {
+        if (bean.getClass().isAnnotationPresent(StatefulFunction.class)
+                && bean instanceof DispatchableFunction) {
             handlerFacade.indexFunction((DispatchableFunction) bean);
             return wrapperFactory.create((DispatchableFunction) bean, dispatcher);
         } else {
