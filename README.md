@@ -118,7 +118,7 @@ Now we can easily add another handler, let's call it decrement
 ### Step 7 - Add handler that send message to another function
 ```java
 @Handler
-    public CompletableFuture<Void> onAddToCard(Context context, BarEvent event) {
+    public CompletableFuture<Void> onBarEvent(Context context, BarEvent event) {
         final Message message =
                 MessageBuilder.forAddress(BarFn.class, "<functionId>")
                         .withCustomType(BarEvent.TYPE, event)
