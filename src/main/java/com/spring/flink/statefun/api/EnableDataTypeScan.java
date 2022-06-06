@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target(TYPE)
 @Component
-public @interface EnableMessageTypeScan {
+public @interface EnableDataTypeScan {
 
     String[] basePackageScan();
 }

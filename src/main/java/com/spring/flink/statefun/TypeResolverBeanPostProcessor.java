@@ -1,6 +1,6 @@
 package com.spring.flink.statefun;
 
-import com.spring.flink.statefun.api.EnableMessageTypeScan;
+import com.spring.flink.statefun.api.EnableDataTypeScan;
 import com.spring.flink.statefun.config.ConfigProperties;
 import com.spring.flink.statefun.api.DataType;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +37,8 @@ public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean.getClass().isAnnotationPresent(EnableMessageTypeScan.class)) {
-            EnableMessageTypeScan scan = bean.getClass().getDeclaredAnnotation(EnableMessageTypeScan.class);
+        if (bean.getClass().isAnnotationPresent(EnableDataTypeScan.class)) {
+            EnableDataTypeScan scan = bean.getClass().getDeclaredAnnotation(EnableDataTypeScan.class);
             String[] basePackageScan = scan.basePackageScan();
             if (basePackageScan.length == 0) {
                 throw new IllegalArgumentException("Assign at least one base package path into EnableMessageTypeScan");
