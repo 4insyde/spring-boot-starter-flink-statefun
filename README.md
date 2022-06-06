@@ -42,7 +42,7 @@ Guide https://spring.io/guides/gs/spring-boot
 ```xml
 <dependency>
     <groupId>com.github.csipon</groupId>
-    <artifactId>spring-boot-starter-flink-sf</artifactId>
+    <artifactId>spring-boot-starter-flink-statefun</artifactId>
     <version>0.1.0</version>
 </dependency>
 ```
@@ -59,15 +59,18 @@ Simple event with one field `text` and static field `TYPE` that annotated with `
 TYPE field is responsible for serialization and deserialization of `IncrementEvent`. Annotation `@MessaageType` 
 says that this field will be found and loaded into global type resolver automatically, therefore it will be 
 able to use this event in functions
+
 ```java
+import com.spring.flink.statefun.api.DataType;
+
 public class IncrementEvent {
 
-    @MessageType
+    @DataType
     public static final Type<IncrementEvent> TYPE = SimpleType.simpleImmutableTypeFrom(
             TypeName.typeNameFromString("<namespace>/IncrementEvent"),
             new ObjectMapper()::writeValueAsBytes,
             bytes -> new ObjectMapper().readValue(bytes, IncrementEvent.class));
-    
+
     private String text;
     // Constructors, Getters and Setters ...
 }
@@ -79,7 +82,8 @@ We created a simple function `FooFn` that increments `COUNT` value when receivin
 Also, we can mark it with `@StatefulFunction` annotation and now the function is a part of Spring context
 
 ```java
-import com.spring.flinksf.api.StatefulFunction;
+import com.spring.flink.statefun.api.Handler;
+import com.spring.flink.statefun.api.StatefulFunction;
 
 @StatefulFunction
 public class FooFn implements DispatchableFunction {
@@ -118,14 +122,14 @@ Now we can easily add another handler, let's call it decrement
 ### Step 7 - Add handler that send message to another function
 ```java
 @Handler
-    public CompletableFuture<Void> onBarEvent(Context context, BarEvent event) {
-        final Message message =
-                MessageBuilder.forAddress(BarFn.class, "<functionId>")
-                        .withCustomType(BarEvent.TYPE, event)
-                        .build();
-        context.send(message);
-        return context.done();
-    }
+public CompletableFuture<Void> onBarEvent(Context context, BarEvent event) {
+    final Message message =
+            MessageBuilder.forAddress(BarFn.class, "<functionId>")
+                    .withCustomType(BarEvent.TYPE, event)
+                    .build();
+    context.send(message);
+    return context.done();
+}
 ```
 
 Use `MessageBuilder` from starter package to be able to build messages using function class
@@ -139,8 +143,11 @@ our function is a Spring bean and part of Spring's context, therefore we can use
 For some events it's impossible to declare a field inside the event and annotate it. To do type declaration in 
 different approach you can use `SerDeType<T>`
 ## Example
+
 ```java
-@MessageType
+import com.spring.flink.statefun.api.DataType;
+
+@DataType
 public class FooSerDeType implements SerDeType<FooEvent> {
 
     @Override

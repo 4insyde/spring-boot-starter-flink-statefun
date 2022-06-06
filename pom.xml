@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.csipon</groupId>
-    <artifactId>spring-boot-starter-flink-sf</artifactId>
+    <artifactId>spring-boot-starter-flink-statefun</artifactId>
     <version>0.1.0</version>
-    <name>spring-boot-starter-flink-sf</name>
+    <name>spring-boot-starter-flink-statefun</name>
     <properties>
         <statefun.version>3.1.0</statefun.version>
         <spring-boot.version>2.6.7</spring-boot.version>
