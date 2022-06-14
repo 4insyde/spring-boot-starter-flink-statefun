@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
+/**
+ * Bean post processor that is looking for beans which are actually stateful functions (annotated with {@link StatefulFunction}
+ * and implements {@link DispatchableFunction}) and register them in global statefun spec
+ */
 @RequiredArgsConstructor
 public class DispatchableFunctionBeanPostProcessor implements BeanPostProcessor {
 

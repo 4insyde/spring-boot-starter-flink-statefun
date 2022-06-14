@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 
 import static com.spring.flink.statefun.TypeNameUtil.typeName;
 
+/**
+ * Stateful function wrapper that is responsible for creating function spec based on original function
+ */
 @RequiredArgsConstructor
 public class DispatchableFunctionWrapper implements FunctionWrapper {
     @Getter

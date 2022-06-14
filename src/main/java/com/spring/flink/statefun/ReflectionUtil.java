@@ -14,6 +14,11 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public abstract class ReflectionUtil {
 
+    /**
+     * Retrieve generic type using class
+     * @param type input class that will be used to get generic type
+     * @return generic type
+     */
     @SneakyThrows
     public static Class<?> retrieveGeneric(SerDeType<?> type) {
         Class<? extends SerDeType> aClass = type.getClass();
@@ -23,6 +28,11 @@ public abstract class ReflectionUtil {
         return Class.forName(actualTypeArgument.getTypeName());
     }
 
+    /**
+     * Retrieve generic type using field object
+     * @param field object that will be used to get generic of this field
+     * @return generic type
+     */
     @SneakyThrows
     public static Class<?> retrieveGeneric(Field field) {
         ParameterizedType genericReturnType = (ParameterizedType) field.getGenericType();

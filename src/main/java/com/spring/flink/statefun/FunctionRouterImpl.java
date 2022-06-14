@@ -7,6 +7,9 @@ import org.apache.flink.statefun.sdk.java.slice.Slices;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Statefun router that invoke request reply handler with request wrapped into Slice
+ */
 @RequiredArgsConstructor
 public class FunctionRouterImpl implements FunctionRouter {
 

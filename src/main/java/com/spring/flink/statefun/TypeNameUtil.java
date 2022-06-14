@@ -9,6 +9,11 @@ import java.util.Optional;
 
 public class TypeNameUtil {
 
+    /**
+     * Build TypeName using dispatchable function and {@link StatefulFunction} annotation parameters
+     * @param clazz target class
+     * @return constructed TypeName
+     */
     public static TypeName typeName(Class<? extends DispatchableFunction> clazz){
         if (clazz.isAnnotationPresent(StatefulFunction.class)) {
             StatefulFunction annotation = clazz.getDeclaredAnnotation(StatefulFunction.class);
@@ -20,6 +25,12 @@ public class TypeNameUtil {
 
     }
 
+    /**
+     * Get annotation namespace param or default
+     * @param annotation object where namespace will be looking for
+     * @param pckg object where default namespace will be extracted
+     * @return namespace
+     */
     private static String getNamespace(StatefulFunction annotation, Package pckg){
         return Optional.ofNullable(annotation.namespace())
                 .filter(Strings::isNotBlank)

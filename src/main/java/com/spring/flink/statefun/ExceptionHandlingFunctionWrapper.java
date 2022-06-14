@@ -10,6 +10,10 @@ import org.slf4j.MDC;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Stateful function wrapper that describe exception handler that will log error using logger and handle it without
+ * throwing exception further
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class ExceptionHandlingFunctionWrapper implements FunctionWrapper {

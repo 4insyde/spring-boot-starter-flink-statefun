@@ -7,6 +7,9 @@ import org.apache.flink.statefun.sdk.java.message.Message;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Interface that indicates stateful function wrapper
+ */
 public interface FunctionWrapper extends DispatchableFunction, StatefulFunctionSpecFactory {
     StatefulFunction getWrappedFunction();
 

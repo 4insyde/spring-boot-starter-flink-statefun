@@ -11,6 +11,9 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Store {@link Type} into hashmap using generic class as key
+ */
 @RequiredArgsConstructor
 public class TypeResolverImpl implements TypeResolver {
     private final Map<Class<?>, Type<?>> types = new HashMap<>();

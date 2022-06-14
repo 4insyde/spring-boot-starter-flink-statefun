@@ -29,6 +29,9 @@ import java.util.stream.Stream;
 import static com.spring.flink.statefun.ReflectionUtil.retrieveGeneric;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Find all field candidates that annotated with {@link DataType} and add them into global type resolver
+ */
 @RequiredArgsConstructor
 public class TypeResolverBeanPostProcessor implements BeanPostProcessor {
 

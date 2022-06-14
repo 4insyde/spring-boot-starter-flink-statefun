@@ -18,6 +18,9 @@ import java.util.Objects;
 
 import static com.spring.flink.statefun.TypeNameUtil.typeName;
 
+/**
+ * {@link org.apache.flink.statefun.sdk.java.message.MessageBuilder}
+ */
 public class MessageBuilder {
 
     private final TypedValue.Builder builder;
