@@ -20,12 +20,12 @@ following requirements:
 2. return value is `CompletableFuture<Void>`
 3. Method parameters `Context context, T event` where `T` is any class that can be serialized and deserialized
 
-`@MessageType` - indicates a class or field that will be used to serialize or deserialize Class defined in generic 
+`@DataType` - indicates a class or field that will be used to serialize or deserialize Class defined in generic 
 of Type<T> object. Starer will load automatically Type object into `TypeResolver`.
 
 `DispatchableFunction` - interface that indicates to Flink SF specification that it's stateful function.
 `SerDeType` - interface that could be used instead of field messate type declaration to identify Flink Type
-related class, the interface should be annotated with `@MessageType`
+related class, the interface should be annotated with `@DataType`
 
 ###Endpoint
 Endpoint `/v1/functions` - is API for statefun engine for communication with remote module, via this endpoint 
@@ -46,8 +46,8 @@ Guide https://spring.io/guides/gs/spring-boot
     <version>0.1.0</version>
 </dependency>
 ```
-### Step 3 - EnableMessageTypeScan
-To enable scanning fields annotated with `@MessageType` you need apply to your config class `@EnableMessageTypeScan` and
+### Step 3 - EnableDataTypeScan
+To enable scanning fields annotated with `@DataType` you need apply to your config class `@EnableDataTypeScan` and
 define annotation parameter `basePackageScan`
 If you pass into `basePackageScan` root path, like that `com`, then your will receive an exception that it's not allowed,
 due to so many packages to scan, but for some brave developers it has an option to disable it, keep in mind that 
@@ -55,7 +55,7 @@ starter will scan all classes inside the path and deeper. To disable `basePackag
 `flink-sf.scan.types.validationEnabled=false`
 
 ### Step 4 - Create function event
-Simple event with one field `text` and static field `TYPE` that annotated with `@MessageType`.
+Simple event with one field `text` and static field `TYPE` that annotated with `@DataType`.
 TYPE field is responsible for serialization and deserialization of `IncrementEvent`. Annotation `@MessaageType` 
 says that this field will be found and loaded into global type resolver automatically, therefore it will be 
 able to use this event in functions
@@ -161,5 +161,5 @@ public class FooSerDeType implements SerDeType<FooEvent> {
 ```
 
 It is more powerful approach that require an extra class but open for you all Spring Bean features, actually class
-annotated with `@MessageType` will be registered into Spring Context as bean, it means that you can work with this class
+annotated with `@DataType` will be registered into Spring Context as bean, it means that you can work with this class
 as with simple spring component
