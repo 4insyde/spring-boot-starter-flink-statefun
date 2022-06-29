@@ -41,7 +41,7 @@ Guide https://spring.io/guides/gs/spring-boot
 
 ```xml
 <dependency>
-    <groupId>com.github.csipon</groupId>
+    <groupId>group.insyde</groupId>
     <artifactId>spring-boot-starter-flink-statefun</artifactId>
     <version>0.1.0</version>
 </dependency>
