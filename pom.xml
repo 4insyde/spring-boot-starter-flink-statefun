@@ -5,7 +5,7 @@
 
     <groupId>group.insyde</groupId>
     <artifactId>spring-boot-starter-flink-statefun</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Spring Boot starter that allow creates stateful functions and run application as remote module
@@ -44,7 +44,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <statefun.version>3.2.0</statefun.version>
-        <spring-boot.version>2.6.7</spring-boot.version>
+        <spring-boot.version>2.7.1</spring-boot.version>
         <lombok.version>1.18.24</lombok.version>
         <delombok.output>target/generated-sources/delombok</delombok.output>
     </properties>
