@@ -61,7 +61,7 @@ says that this field will be found and loaded into global type resolver automati
 able to use this event in functions
 
 ```java
-import com.spring.flink.statefun.api.DataType;
+import com.insyde.flink.statefun.api.DataType;
 
 public class IncrementEvent {
 
@@ -82,8 +82,8 @@ We created a simple function `FooFn` that increments `COUNT` value when receivin
 Also, we can mark it with `@StatefulFunction` annotation and now the function is a part of Spring context
 
 ```java
-import com.spring.flink.statefun.api.Handler;
-import com.spring.flink.statefun.api.StatefulFunction;
+import com.insyde.flink.statefun.api.Handler;
+import com.insyde.flink.statefun.api.StatefulFunction;
 
 @StatefulFunction
 public class FooFn implements DispatchableFunction {
@@ -145,7 +145,7 @@ different approach you can use `SerDeType<T>`
 ## Example
 
 ```java
-import com.spring.flink.statefun.api.DataType;
+import com.insyde.flink.statefun.api.DataType;
 
 @DataType
 public class FooSerDeType implements SerDeType<FooEvent> {
